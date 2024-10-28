@@ -1,0 +1,17 @@
+# cloudbuild.yaml
+
+steps:
+  - name: 'gcr.io/cloud-builders/go'
+    args: ['build', '-o', 'main', '.']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'payment-gateway',
+      '--platform', 'managed',
+      '--region', 'us-central1',  # Change to your preferred region
+      '--image', 'gcr.io/$PROJECT_ID/payment-gateway',
+      '--add-cloudsql-instances', '<project-id>:<region>:<instance-id>',
+      '--allow-unauthenticated'
+    ]
+
+images:
+  - 'gcr.io/$PROJECT_ID/payment-gateway'
